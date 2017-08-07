@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path("../lib", __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require './lib/codeabby_scraper'
+
+begin 
+ c = CodeabbyScraper
+ c.new(ARGV[0])
+rescue CodeabbyScraper::ProblemNotFound
+  puts "A code abby problem with that title could not be found"
+   exit(1)
+end 
+
+
+
+directory_created = false
+while directory_created == false
+ puts "Where would you like to put the code problem? (path or enter for current)"
+ dir = STDIN.gets.chomp
+	if dir.empty?
+		Dir.mkdir("./" + c.dirname)
+		directory_created = true
+	else 
+		if File.directory?(dir.strip)
+			Dir.mkdir(dir + c.dirname)
+			directory_created = true
+		else 
+		  puts "Not a valid directory\n"
+		  sleep(1)
+		end
+	end
+end
+
